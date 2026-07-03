@@ -1,12 +1,18 @@
 # NBA Player Scoring Tier Classifier
 
-A multi-class classification project predicting which of 5 scoring tiers an NBA player belongs to (Elite / All-Star / Starter / Bench / Reserve), based purely on per-season box-score statistics. Built for the Machine Learning course in my MBA in Business Analytics (Clarkson University).
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white)
+![pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37726?style=flat&logo=jupyter&logoColor=white)
 
-**[Full written report (PDF)](./NBA_Scoring_Tier_Report.pdf)** · **[Notebook](./FINAL_PROJECT_ML.ipynb)**
+A multi-class ML classifier predicting which of 5 scoring tiers an NBA player belongs to (Elite / All-Star / Starter / Bench / Reserve), based purely on per-season box-score statistics. Benchmarked 6 models with class-imbalance handling and macro F1 optimization.
+
+**[Full written report (PDF)](./NBA_Scoring_Tier_Report.pdf)** · **[Notebook](./FINAL_PROJECT_ML.ipynb)** · **[Try Interactive Demo](https://www.kaggle.com/code/samueldiffo99/nba-scoring-tier-classifier)**
 
 ## Problem
 
-NBA player evaluation traditionally leans on subjective scouting. This project tests whether standard box-score statistics alone are enough to objectively and automatically classify a player's role — useful for team management, fantasy sports, and performance benchmarking.
+NBA player evaluation traditionally leans on subjective scouting. This project tests whether standard box-score statistics alone are enough to objectively and automatically classify a player's role and tier.
 
 - **Dataset**: [NBA Player Stats – All Seasons](https://www.kaggle.com/datasets/justinas/nba-players-data) (Kaggle), 27 seasons (1996–97 to 2022–23)
 - **Scope after cleaning**: 12,844 player-season records, 23 features
@@ -16,14 +22,15 @@ NBA player evaluation traditionally leans on subjective scouting. This project t
 
 <img src="figures/target_distribution.png" width="500">
 
-Reserve and Bench players together make up 69% of the data; Elite scorers are just 1.7%. This isn't sampling noise — it reflects the real NBA roster pyramid (every team has a handful of stars and dozens of role players). This drove two decisions:
+Reserve and Bench players together make up 69% of the data; Elite scorers are just 1.7%. This isn't sampling noise — it reflects the real NBA roster pyramid (every team has a handful of stars and many role players).
 
+**Why this matters:**
 1. **Macro F1** was used as the primary metric instead of accuracy, since accuracy would reward a model that just predicts "Bench" or "Reserve" every time.
-2. **SMOTE was tested and rejected.** I ran every model with and without SMOTE oversampling. SMOTE improved Elite-class recall in isolation but *degraded* macro F1 across all six models — it introduced noise at the Starter/Bench boundary, the hardest decision surface in the dataset. The unbalanced pipeline outperformed SMOTE on every single model, so it was used for all final results.
+2. **SMOTE was tested and rejected.** I ran every model with and without SMOTE oversampling. SMOTE improved Elite-class recall in isolation but *degraded* macro F1 across all six models — it introduced synthetic data noise that hurt generalization on the true distribution.
 
 ## Models & Results
 
-Six models were trained with 5-fold stratified cross-validation (Logistic Regression, Decision Tree, SVC, Random Forest, Gradient Boosting, Neural Network), each tuned via grid or randomized search on macro F1.
+Six models were trained with 5-fold stratified cross-validation (Logistic Regression, Decision Tree, SVC, Random Forest, Gradient Boosting, Neural Network), each tuned via grid or randomized search.
 
 | Model | Test Accuracy | Test F1 (macro) | CV Std Dev |
 |---|---|---|---|
@@ -45,7 +52,7 @@ The confusion matrix confirms the hardest boundary is Starter/Bench — statisti
 
 ## What Drives Tier Classification
 
-Across all six models, **points per game, usage %, and true shooting %** consistently ranked as the top predictors — offensive volume and efficiency dominate over rebounding, assists, or biographical features. Full feature importance analysis and the correlation matrix are in the [report](./NBA_Scoring_Tier_Report.pdf).
+Across all six models, **points per game, usage %, and true shooting %** consistently ranked as the top predictors — offensive volume and efficiency dominate over rebounding, assists, or biographical factors.
 
 ## Methodology Highlights
 
@@ -54,12 +61,27 @@ Across all six models, **points per game, usage %, and true shooting %** consist
 - High-cardinality identifiers (player name, season, team) dropped to prevent label leakage
 - SMOTE evaluated via `imblearn` Pipeline (fit on training folds only) — see rejection rationale above
 
+## Installation & Quick Start
+
+```bash
+# Clone the repo
+git clone https://github.com/samueldiffo99/NBA-scoring-tier-classifier.git
+cd NBA-scoring-tier-classifier
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the notebook
+jupyter notebook FINAL_PROJECT_ML.ipynb
+```
+
 ## Repo Structure
 
 ```
 FINAL_PROJECT_ML.ipynb      -- full pipeline: EDA, preprocessing, 6 models, evaluation
 NBA_Scoring_Tier_Report.pdf -- written report (methodology, results, analysis, next steps)
 figures/                    -- key visualizations (target distribution, confusion matrix)
+requirements.txt            -- Python dependencies
 ```
 
 ## Next Steps
