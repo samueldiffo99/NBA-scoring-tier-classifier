@@ -8,7 +8,7 @@
 
 A multi-class ML classifier predicting which of 5 scoring tiers an NBA player belongs to (Elite / All-Star / Starter / Bench / Reserve), based purely on per-season box-score statistics. Benchmarked 6 models with class-imbalance handling and macro F1 optimization.
 
-**[Full written report (PDF)](./NBA_Scoring_Tier_Report.pdf)** · **[Notebook](./FINAL_PROJECT_ML.ipynb)** · **[Try Interactive Demo](https://www.kaggle.com/code/samueldiffo99/nba-scoring-tier-classifier)**
+**[Full written report (PDF)](./NBA_Scoring_Tier_Report.pdf)** · **[Notebook](./FINAL_PROJECT_ML.ipynb)** · **[🚀 Try Interactive Demo on Kaggle](https://www.kaggle.com/code/samueldiffo/nba-scoring-tier-classifier)**
 
 ## Problem
 
